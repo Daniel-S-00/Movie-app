@@ -1,7 +1,7 @@
-import "./App.css";
+import React from "react";
 
 function App() {
-  return <div>content</div>;
+  return <h1 class="text-3xl font-bold underline">Hello world!</h1>;
 }
 
 export default App;
