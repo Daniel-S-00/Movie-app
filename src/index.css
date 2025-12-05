@@ -5,6 +5,7 @@
 @import "tailwindcss";
 /*---- variavles ----*/
 @theme {
+  /*---- collors ----*/
   --color-primary: #030014;
 
   --color-light-100: #cecefb;
@@ -13,19 +14,19 @@
   --color-gray-100: #9ca4ab;
 
   --color-dark-100: #0f0d23;
-
+  /*---- fonts ----*/
   --font-dm-sans: DM Sans, sans-serif;
-
-  --breakpoint-xs: 480px;
-
-  --background-image-hero-pattern: url("/hero-bg.png");
+  /*---- breakpoints ----*/
+  --breakpoint-xs: 480px; /*---- .xs ----*/
+  /*---- hero image ----*/
+  --background-image-hero-pattern: url("/hero-bg.png"); /*---- .bg-hero-pattern ----*/
 }
-/*---- base layer ----*/
+/*---- base styles ----*/
 @layer base {
   body {
     font-family: "DM Sans", serif;
     font-optical-sizing: auto;
-    background: #030014;
+    @apply bg-primary;
   }
 
   h1 {
