@@ -22,23 +22,28 @@ function App() {
   const fetchMovies = async () => {
     setIsLoading(true);
     setErrorMessage("");
+
     try {
       const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
       const response = await fetch(endpoint, API_OPTIONS);
+
       if (!response.ok) {
         throw new Error("Failed to fetch movies");
       }
       const data = await response.json();
-      if (data.respone === "False") {
-        setErrorMessage(data.Error || "Failed to fetch movies");
+      if (data.results) {
+        setMovieList(data.results);
+      } else {
+        setErrorMessage("No movies found");
         setMovieList([]);
-        return;
       }
-      setMovieList(data.results || []);
+
     } catch (error) {
       console.log(error);
       setErrorMessage("Error fetching movies, please try again later");
-    } finally {
+    }
+
+    finally {
       setIsLoading(false);
     }
   };
@@ -61,7 +66,7 @@ function App() {
         <section className="all-movies">
           <h2 className="mt-10">All movies</h2>
           {isLoading ? (
-            <Spinner />
+              <Spinner />
           ) : errorMessage ? (
             <p className="text-red-500">{errorMessage}</p>
           ) : (
