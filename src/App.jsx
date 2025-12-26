@@ -34,17 +34,16 @@ function App() {
       const endpoint = query
           ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
           : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`; //default popular movies
-     // console.log("--ENDPOINT--", endpoint);
+
                                               //URL     //options
       const response = await fetch(endpoint, API_OPTIONS); // headers with API key
-     // console.log("--RESPONSE--", response);
+
       // Check if fetch did not returned ok
       if (!response.ok) {
         throw new Error("Failed to fetch movies");
       }
       // Parse JSON data
       const data = await response.json();
-      // console.log("--DATA--", data);
 
       if (data.results) {
         setMovieList(data.results);

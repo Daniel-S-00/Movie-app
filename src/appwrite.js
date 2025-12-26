@@ -20,11 +20,10 @@ export const updateSearchCount = async (searchTerm, movie) => {
         // If exists, increment count, else create new document
         if (result.documents.length > 0) {
             const doc = result.documents[0];
-            // console.log("--DOC--", doc)
             await database.updateDocument(DATABASE_ID, COLLECTION_ID, doc.$id, {
                 count: doc.count + 1,
             });
-            //console.log("--DOC COUNT---", doc.count);
+
         } else {
             await database.createDocument(DATABASE_ID, COLLECTION_ID, ID.unique(), {
                 searchTerm: searchTerm,
@@ -50,6 +49,8 @@ export const getTrendingMovies = async () => {
         return [];
     }
 }
+
+
 //class Client {
 //   setEndpoint(url)
 //   setProject(projectId)
