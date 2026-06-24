@@ -1,36 +1,40 @@
-import { Client, Databases, Query, ID } from "appwrite"; //compiled SDK
-
-const DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID; //manual
-const PROJECT_ID = import.meta.env.VITE_APPWRITE_PROJECT_ID; //auto
-const COLLECTION_ID = import.meta.env.VITE_APPWRITE_COLLECTION_ID; //manual
+import { Client, Databases, Query, ID } from "appwrite";
+import { config } from "./config.js";
 
 const client = new Client()
-    .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT) //auto
-    .setProject(PROJECT_ID);
+    .setEndpoint(config.appwrite.endpoint)
+    .setProject(config.appwrite.projectId);
 
 const database = new Databases(client);
 
 export const updateSearchCount = async (searchTerm, movie) => {
     try {
-        // Check if document with the search term already exists
-        const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
-            Query.equal("searchTerm", searchTerm),
-        ]);
-        console.log("--RESULT--", result);
-        // If exists, increment count, else create new document
+        const result = await database.listDocuments(
+            config.appwrite.databaseId,
+            config.appwrite.collectionId,
+            [Query.equal("searchTerm", searchTerm)]
+        );
+
         if (result.documents.length > 0) {
             const doc = result.documents[0];
-            await database.updateDocument(DATABASE_ID, COLLECTION_ID, doc.$id, {
-                count: doc.count + 1,
-            });
-
+            await database.updateDocument(
+                config.appwrite.databaseId,
+                config.appwrite.collectionId,
+                doc.$id,
+                { count: doc.count + 1 }
+            );
         } else {
-            await database.createDocument(DATABASE_ID, COLLECTION_ID, ID.unique(), {
-                searchTerm: searchTerm,
-                count: 1,
-                movie_id: movie.id,
-                poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-            });
+            await database.createDocument(
+                config.appwrite.databaseId,
+                config.appwrite.collectionId,
+                ID.unique(),
+                {
+                    searchTerm: searchTerm,
+                    count: 1,
+                    movie_id: movie.id,
+                    poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+                }
+            );
         }
     } catch (error) {
         console.error("Error updating search count:", error);
@@ -39,30 +43,14 @@ export const updateSearchCount = async (searchTerm, movie) => {
 
 export const getTrendingMovies = async () => {
     try {
-        const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
-            Query.orderDesc("count"),
-            Query.limit(5),
-        ]);
+        const result = await database.listDocuments(
+            config.appwrite.databaseId,
+            config.appwrite.collectionId,
+            [Query.orderDesc("count"), Query.limit(5)]
+        );
         return result.documents;
     } catch (error) {
         console.error("Error fetching trending movies:", error);
         return [];
     }
-}
-
-
-//class Client {
-//   setEndpoint(url)
-//   setProject(projectId)
-//   setJWT(token)
-// }
-//
-// class Databases {
-//   constructor(client)
-//
-//   listDocuments()
-//   getDocument()
-//   createDocument()
-//   updateDocument()
-//   deleteDocument()
-// }
+};
