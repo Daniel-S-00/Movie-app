@@ -4,10 +4,12 @@ import SkeletonCard from "./components/SkeletonCard";
 import MovieCard from "./components/MovieCard";
 import Modal from "./components/Modal";
 import EmptyState from "./components/EmptyState";
+import ThemeToggle from "./components/ThemeToggle.jsx";
 import { useMovies } from "./hooks/useMovies.js";
 import { useTrendingMovies } from "./hooks/useTrendingMovies.js";
 import { useMovieDetails } from "./hooks/useMovieDetails.js";
 import { useRecentSearches } from "./hooks/useRecentSearches.js";
+import { useTheme } from "./hooks/useTheme.js";
 
 const MovieDetails = lazy(() => import("./components/MovieDetails.jsx"));
 
@@ -15,6 +17,7 @@ const SKELETON_COUNT = 8;
 
 function App() {
   const { recent, addRecent, clearRecent } = useRecentSearches();
+  const { theme, toggleTheme } = useTheme();
   const {
     searchTerm,
     setSearchTerm,
@@ -48,6 +51,7 @@ function App() {
   return (
     <main>
       <div className="pattern" />
+      <ThemeToggle theme={theme} onToggle={toggleTheme} />
       <div className="wrapper">
         <header>
           <img src="/hero.png" alt="Hero banner" />
