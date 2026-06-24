@@ -4,16 +4,7 @@ import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
 import {useDebounce} from "react-use";
 import {updateSearchCount, getTrendingMovies} from "./appwrite.js";
-
-const API_BASE_URL = "https://api.themoviedb.org/3";
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-const API_OPTIONS = {
-  method: "get",
-  headers: {
-    accept: "application/json",
-    Authorization: `Bearer ${API_KEY}`,
-  },
-};
+import {fetchMovies} from "./services/tmdb.js";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,41 +16,21 @@ function App() {
 
   useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
 
-  // Fetch movies from TMDB API
-  const fetchMovies = async (query = "") => {
+  const loadMovies = async (query = "") => {
     setIsLoading(true);
     setErrorMessage("");
 
     try {
-      const endpoint = query
-          ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-          : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`; //default popular movies
-
-                                              //URL     //options
-      const response = await fetch(endpoint, API_OPTIONS); // headers with API key
-
-      // Check if fetch did not returned ok
-      if (!response.ok) {
-        throw new Error("Failed to fetch movies");
-      }
-      // Parse JSON data
-      const data = await response.json();
-
-      if (data.results) {
-        setMovieList(data.results);
-      } else {
-        setErrorMessage("No movies found");
-        setMovieList([]);
-      }
-      if (query && data.results.length > 0) {
-        await updateSearchCount(query, data.results[0]);
+      const results = await fetchMovies(query);
+      setMovieList(results);
+      if (query && results.length > 0) {
+        await updateSearchCount(query, results[0]);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setErrorMessage("Error fetching movies, please try again later");
-    }
-
-    finally {
+      setMovieList([]);
+    } finally {
       setIsLoading(false);
     }
   };
@@ -74,7 +45,7 @@ function App() {
     }
   }
   useEffect(() => {
-    fetchMovies(debouncedSearchTerm);
+    loadMovies(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
 
     useEffect(() => {
