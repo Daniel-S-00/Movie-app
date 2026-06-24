@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Search from "./components/Search";
 import SkeletonCard from "./components/SkeletonCard";
 import MovieCard from "./components/MovieCard";
@@ -31,6 +31,10 @@ function App() {
     isLoading: isLoadingDetails,
     error: detailsError,
   } = useMovieDetails(selectedMovieId);
+  const handleMovieSelect = useCallback(
+    (id) => setSelectedMovieId(id),
+    []
+  );
 
   return (
     <main>
@@ -120,7 +124,7 @@ function App() {
                   <MovieCard
                     key={movie.id}
                     movie={movie}
-                    onClick={() => setSelectedMovieId(movie.id)}
+                    onSelect={handleMovieSelect}
                   />
                 ))}
               </ul>

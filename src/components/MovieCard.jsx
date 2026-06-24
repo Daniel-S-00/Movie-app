@@ -1,18 +1,22 @@
-function MovieComponent({
-  movie: { title, vote_average, poster_path, release_date, original_language },
-  onClick,
-}) {
+import { memo } from "react";
+
+function MovieComponent({ movie, onSelect }) {
+  const { title, vote_average, poster_path, release_date, original_language } =
+    movie;
+
+  const handleClick = () => onSelect?.(movie.id);
+
   const handleKeyDown = (e) => {
-    if ((e.key === "Enter" || e.key === " ") && onClick) {
+    if ((e.key === "Enter" || e.key === " ") && onSelect) {
       e.preventDefault();
-      onClick();
+      onSelect(movie.id);
     }
   };
 
   return (
     <div
       className="movie-card cursor-pointer transition hover:-translate-y-1 focus-within:ring-2 focus-within:ring-light-100/40"
-      onClick={onClick}
+      onClick={handleClick}
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
@@ -48,4 +52,4 @@ function MovieComponent({
   );
 }
 
-export default MovieComponent;
+export default memo(MovieComponent);
