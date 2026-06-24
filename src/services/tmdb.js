@@ -23,3 +23,13 @@ export const fetchMovies = async (query = "") => {
   const data = await response.json();
   return data.results ?? [];
 };
+
+export const fetchMovieDetails = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/movie/${id}`, API_OPTIONS);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch movie details");
+  }
+
+  return response.json();
+};
