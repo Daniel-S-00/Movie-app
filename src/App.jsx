@@ -18,6 +18,7 @@ function App() {
   const {
     searchTerm,
     setSearchTerm,
+    debouncedSearchTerm,
     movieList,
     isLoading,
     isLoadingMore,
@@ -127,7 +128,7 @@ function App() {
             <EmptyState searchTerm={searchTerm} />
           ) : (
             <>
-              <ul>
+              <ul key={debouncedSearchTerm} className="animate-fade-in-up">
                 {movieList.map((movie) => (
                   <MovieCard
                     key={movie.id}

@@ -148,6 +148,21 @@
   @apply bg-linear-to-r from-[#D6C7FF] to-[#AB8BFF] bg-clip-text text-transparent;
 }
 
+@utility animate-fade-in-up {
+  animation: fadeInUp 0.35s ease-out both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @utility fancy-text {
   -webkit-text-stroke: 5px rgba(206, 206, 251, 0.5);
   font-size: 190px;

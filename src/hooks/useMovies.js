@@ -74,6 +74,7 @@ export const useMovies = (initialSearchTerm = "", onSearchSuccess) => {
   return {
     searchTerm,
     setSearchTerm,
+    debouncedSearchTerm,
     movieList,
     isLoading,
     isLoadingMore,
