@@ -27,7 +27,13 @@ function App() {
               {trendingMovies.map((movie, index) => (
                 <li key={movie.$id} title={movie.searchTerm}>
                   <p>{index + 1}</p>
-                  <img src={movie.poster_url} alt={movie.searchTerm} />
+                  <img
+                    src={movie.poster_url}
+                    alt={movie.searchTerm}
+                    loading="lazy"
+                    decoding="async"
+                    className="bg-dark-100"
+                  />
                 </li>
               ))}
             </ul>

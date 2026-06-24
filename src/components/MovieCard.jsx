@@ -10,6 +10,9 @@ function MovieComponent({
             : "/no-movie.png"
         }
         alt={title}
+        loading="lazy"
+        decoding="async"
+        className="bg-dark-100"
       />
       <div className="mt-4">
         <h3>{title}</h3>
