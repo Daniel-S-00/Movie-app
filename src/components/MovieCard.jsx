@@ -1,8 +1,23 @@
 function MovieComponent({
   movie: { title, vote_average, poster_path, release_date, original_language },
+  onClick,
 }) {
+  const handleKeyDown = (e) => {
+    if ((e.key === "Enter" || e.key === " ") && onClick) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
-    <div className="movie-card">
+    <div
+      className="movie-card cursor-pointer transition hover:-translate-y-1 focus-within:ring-2 focus-within:ring-light-100/40"
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={`View details for ${title}`}
+    >
       <img
         src={
           poster_path
@@ -34,5 +49,3 @@ function MovieComponent({
 }
 
 export default MovieComponent;
-
-// https://api.themoviedb.org/3/movie/{movie_id}/images

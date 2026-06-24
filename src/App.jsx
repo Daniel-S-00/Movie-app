@@ -1,9 +1,13 @@
+import { useState } from "react";
 import Search from "./components/Search";
 import SkeletonCard from "./components/SkeletonCard";
 import MovieCard from "./components/MovieCard";
+import MovieDetails from "./components/MovieDetails";
+import Modal from "./components/Modal";
 import EmptyState from "./components/EmptyState";
 import { useMovies } from "./hooks/useMovies.js";
 import { useTrendingMovies } from "./hooks/useTrendingMovies.js";
+import { useMovieDetails } from "./hooks/useMovieDetails.js";
 
 const SKELETON_COUNT = 8;
 
@@ -11,6 +15,12 @@ function App() {
   const { searchTerm, setSearchTerm, movieList, isLoading, errorMessage } =
     useMovies();
   const trendingMovies = useTrendingMovies();
+  const [selectedMovieId, setSelectedMovieId] = useState(null);
+  const {
+    movie: selectedMovie,
+    isLoading: isLoadingDetails,
+    error: detailsError,
+  } = useMovieDetails(selectedMovieId);
 
   return (
     <main>
@@ -72,12 +82,33 @@ function App() {
           ) : (
             <ul>
               {movieList.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
+                <MovieCard
+                  key={movie.id}
+                  movie={movie}
+                  onClick={() => setSelectedMovieId(movie.id)}
+                />
               ))}
             </ul>
           )}
         </section>
       </div>
+
+      <Modal
+        open={!!selectedMovieId}
+        onClose={() => setSelectedMovieId(null)}
+        label="Movie details"
+      >
+        {isLoadingDetails ? (
+          <div className="p-12 text-center text-light-200">Loading details…</div>
+        ) : detailsError ? (
+          <div className="p-12 text-center text-red-500">{detailsError}</div>
+        ) : selectedMovie ? (
+          <MovieDetails
+            movie={selectedMovie}
+            onClose={() => setSelectedMovieId(null)}
+          />
+        ) : null}
+      </Modal>
     </main>
   );
 }
