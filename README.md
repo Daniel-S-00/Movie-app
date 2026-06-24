@@ -2,8 +2,8 @@
 
 A modern movie discovery app built with React, Vite, and Tailwind CSS. Search for movies, browse trending searches, and explore a curated catalog powered by [TMDB](https://www.themoviedb.org/).
 
-![Hero](./screenshot-hero.png)
-![Movies grid](./screenshot-movies.png)
+![Hero](./docs/screenshots/hero.png)
+![Movies grid](./docs/screenshots/movies.png)
 
 ## Live Demo
 
