@@ -12,8 +12,16 @@ import { useMovieDetails } from "./hooks/useMovieDetails.js";
 const SKELETON_COUNT = 8;
 
 function App() {
-  const { searchTerm, setSearchTerm, movieList, isLoading, errorMessage } =
-    useMovies();
+  const {
+    searchTerm,
+    setSearchTerm,
+    movieList,
+    isLoading,
+    isLoadingMore,
+    hasMore,
+    loadMore,
+    errorMessage,
+  } = useMovies();
   const trendingMovies = useTrendingMovies();
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const {
@@ -80,15 +88,29 @@ function App() {
           ) : movieList.length === 0 ? (
             <EmptyState searchTerm={searchTerm} />
           ) : (
-            <ul>
-              {movieList.map((movie) => (
-                <MovieCard
-                  key={movie.id}
-                  movie={movie}
-                  onClick={() => setSelectedMovieId(movie.id)}
-                />
-              ))}
-            </ul>
+            <>
+              <ul>
+                {movieList.map((movie) => (
+                  <MovieCard
+                    key={movie.id}
+                    movie={movie}
+                    onClick={() => setSelectedMovieId(movie.id)}
+                  />
+                ))}
+              </ul>
+              {hasMore && (
+                <div className="mt-8 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={loadMore}
+                    disabled={isLoadingMore}
+                    className="rounded-lg bg-light-100/10 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-light-100/20 focus:outline-none focus:ring-2 focus:ring-light-100/40 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {isLoadingMore ? "Loading…" : "Load more"}
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </section>
       </div>
