@@ -1,4 +1,4 @@
-import { useState, useCallback, lazy, Suspense } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import Search from "./components/Search";
 import SkeletonCard from "./components/SkeletonCard";
 import MovieCard from "./components/MovieCard";
@@ -36,6 +36,13 @@ function App() {
     (id) => setSelectedMovieId(id),
     []
   );
+
+  useEffect(() => {
+    const base = "Movie App";
+    document.title = searchTerm
+      ? `${base} — ${searchTerm}`
+      : `${base} — Discover Films You'll Love`;
+  }, [searchTerm]);
 
   return (
     <main>
