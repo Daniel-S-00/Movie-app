@@ -1,14 +1,15 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, lazy, Suspense } from "react";
 import Search from "./components/Search";
 import SkeletonCard from "./components/SkeletonCard";
 import MovieCard from "./components/MovieCard";
-import MovieDetails from "./components/MovieDetails";
 import Modal from "./components/Modal";
 import EmptyState from "./components/EmptyState";
 import { useMovies } from "./hooks/useMovies.js";
 import { useTrendingMovies } from "./hooks/useTrendingMovies.js";
 import { useMovieDetails } from "./hooks/useMovieDetails.js";
 import { useRecentSearches } from "./hooks/useRecentSearches.js";
+
+const MovieDetails = lazy(() => import("./components/MovieDetails.jsx"));
 
 const SKELETON_COUNT = 8;
 
@@ -155,10 +156,16 @@ function App() {
         ) : detailsError ? (
           <div className="p-12 text-center text-red-500">{detailsError}</div>
         ) : selectedMovie ? (
-          <MovieDetails
-            movie={selectedMovie}
-            onClose={() => setSelectedMovieId(null)}
-          />
+          <Suspense
+            fallback={
+              <div className="p-12 text-center text-light-200">Loading…</div>
+            }
+          >
+            <MovieDetails
+              movie={selectedMovie}
+              onClose={() => setSelectedMovieId(null)}
+            />
+          </Suspense>
         ) : null}
       </Modal>
     </main>
