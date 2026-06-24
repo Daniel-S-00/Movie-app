@@ -25,7 +25,21 @@ function App() {
             <h2>Trending Searches</h2>
             <ul>
               {trendingMovies.map((movie, index) => (
-                <li key={movie.$id} title={movie.searchTerm}>
+                <li
+                  key={movie.$id}
+                  title={movie.searchTerm}
+                  onClick={() => setSearchTerm(movie.searchTerm)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setSearchTerm(movie.searchTerm);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Search for ${movie.searchTerm}`}
+                  className="cursor-pointer transition hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-light-100/40 rounded-lg"
+                >
                   <p>{index + 1}</p>
                   <img
                     src={movie.poster_url}
