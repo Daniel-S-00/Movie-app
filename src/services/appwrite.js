@@ -1,5 +1,5 @@
 import { Client, Databases, Query, ID } from "appwrite";
-import { config } from "./config.js";
+import { config } from "../config.js";
 
 const client = new Client()
     .setEndpoint(config.appwrite.endpoint)

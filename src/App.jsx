@@ -3,7 +3,7 @@ import Search from "./components/Search";
 import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
 import {useDebounce} from "react-use";
-import {updateSearchCount, getTrendingMovies} from "./appwrite.js";
+import {updateSearchCount, getTrendingMovies} from "./services/appwrite.js";
 import {fetchMovies} from "./services/tmdb.js";
 
 function App() {
