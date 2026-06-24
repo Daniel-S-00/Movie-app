@@ -3,7 +3,7 @@ import { useDebounce } from "react-use";
 import { fetchMovies } from "../services/tmdb.js";
 import { updateSearchCount } from "../services/appwrite.js";
 
-export const useMovies = (initialSearchTerm = "") => {
+export const useMovies = (initialSearchTerm = "", onSearchSuccess) => {
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(initialSearchTerm);
   const [movieList, setMovieList] = useState([]);
@@ -35,6 +35,7 @@ export const useMovies = (initialSearchTerm = "") => {
         setHasMore(1 < totalPages);
         if (debouncedSearchTerm && results.length > 0) {
           await updateSearchCount(debouncedSearchTerm, results[0]);
+          onSearchSuccess?.(debouncedSearchTerm);
         }
       } catch (error) {
         if (cancelled) return;
@@ -51,7 +52,7 @@ export const useMovies = (initialSearchTerm = "") => {
     return () => {
       cancelled = true;
     };
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, onSearchSuccess]);
 
   const loadMore = useCallback(async () => {
     if (isLoadingMore || !hasMore || isLoading) return;

@@ -8,10 +8,12 @@ import EmptyState from "./components/EmptyState";
 import { useMovies } from "./hooks/useMovies.js";
 import { useTrendingMovies } from "./hooks/useTrendingMovies.js";
 import { useMovieDetails } from "./hooks/useMovieDetails.js";
+import { useRecentSearches } from "./hooks/useRecentSearches.js";
 
 const SKELETON_COUNT = 8;
 
 function App() {
+  const { recent, addRecent, clearRecent } = useRecentSearches();
   const {
     searchTerm,
     setSearchTerm,
@@ -21,7 +23,7 @@ function App() {
     hasMore,
     loadMore,
     errorMessage,
-  } = useMovies();
+  } = useMovies("", addRecent);
   const trendingMovies = useTrendingMovies();
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const {
@@ -40,6 +42,30 @@ function App() {
             Find <span className="text-gradient">Movies</span> You'll Love
           </h1>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          {recent.length > 0 && (
+            <div className="mx-auto mt-4 flex max-w-3xl flex-wrap items-center justify-center gap-2">
+              <span className="text-xs uppercase tracking-wide text-light-200/60">
+                Recent
+              </span>
+              {recent.map((term) => (
+                <button
+                  key={term}
+                  type="button"
+                  onClick={() => setSearchTerm(term)}
+                  className="rounded-full bg-light-100/10 px-3 py-1 text-xs text-light-200 transition hover:bg-light-100/20 focus:outline-none focus:ring-2 focus:ring-light-100/40"
+                >
+                  {term}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={clearRecent}
+                className="text-xs text-light-200/60 transition hover:text-light-200 focus:outline-none focus:ring-2 focus:ring-light-100/40"
+              >
+                Clear
+              </button>
+            </div>
+          )}
         </header>
         {trendingMovies.length > 0 && (
           <section className="trending">
