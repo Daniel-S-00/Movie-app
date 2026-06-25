@@ -16,5 +16,16 @@ export default defineConfig({
       VITE_APPWRITE_DATABASE_ID: "test-database",
       VITE_APPWRITE_COLLECTION_ID: "test-collection",
     },
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html"],
+      include: ["src/**/*.{js,jsx}"],
+      exclude: [
+        "src/**/__tests__/**",
+        "src/test/**",
+        "src/main.jsx",
+        "src/reportWebVitals.js",
+      ],
+    },
   },
 });

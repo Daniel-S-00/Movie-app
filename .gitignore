@@ -26,3 +26,6 @@ dist-ssr
 # AI / opencode tooling (not part of the project)
 .agents/
 skills-lock.json
+
+# Test coverage output
+coverage/
