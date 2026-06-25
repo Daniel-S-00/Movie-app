@@ -5,6 +5,7 @@ import MovieCard from "./components/MovieCard";
 import Modal from "./components/Modal";
 import EmptyState from "./components/EmptyState";
 import ThemeToggle from "./components/ThemeToggle.jsx";
+import LoadingScreen from "./components/LoadingScreen.jsx";
 import { useMovies } from "./hooks/useMovies.js";
 import { useTrendingMovies } from "./hooks/useTrendingMovies.js";
 import { useMovieDetails } from "./hooks/useMovieDetails.js";
@@ -50,6 +51,7 @@ function App() {
 
   return (
     <main>
+      <LoadingScreen />
       <div className="pattern" />
       <ThemeToggle theme={theme} onToggle={toggleTheme} />
       <div className="wrapper">
