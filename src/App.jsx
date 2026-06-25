@@ -133,11 +133,12 @@ function App() {
           ) : (
             <>
               <ul key={debouncedSearchTerm} className="animate-fade-in-up">
-                {movieList.map((movie) => (
+                {movieList.map((movie, index) => (
                   <MovieCard
                     key={movie.id}
                     movie={movie}
                     onSelect={handleMovieSelect}
+                    style={{ "--enter-delay": `${Math.min(index, 12) * 0.05}s` }}
                   />
                 ))}
               </ul>

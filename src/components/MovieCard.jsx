@@ -1,6 +1,6 @@
 import { memo, useRef } from "react";
 
-function MovieComponent({ movie, onSelect }) {
+function MovieComponent({ movie, onSelect, style }) {
   const { title, vote_average, poster_path, release_date, original_language } =
     movie;
   const ref = useRef(null);
@@ -37,6 +37,7 @@ function MovieComponent({ movie, onSelect }) {
     <div
       ref={ref}
       className="movie-card cursor-pointer focus-within:ring-2 focus-within:ring-light-100/40"
+      style={style}
       onClick={handleClick}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
