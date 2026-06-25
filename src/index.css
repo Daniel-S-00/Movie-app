@@ -286,6 +286,63 @@
   }
 }
 
+/*---- aurora background ----*/
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.aurora-blob {
+  position: absolute;
+  width: 55vw;
+  height: 55vw;
+  max-width: 700px;
+  max-height: 700px;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+  will-change: transform;
+}
+
+.aurora-blob-1 {
+  background: radial-gradient(circle, #7c3aed, transparent 70%);
+  top: -10%;
+  left: -10%;
+  animation: auroraFloat1 20s ease-in-out infinite;
+}
+
+.aurora-blob-2 {
+  background: radial-gradient(circle, #4338ca, transparent 70%);
+  bottom: -10%;
+  right: -10%;
+  animation: auroraFloat2 25s ease-in-out infinite;
+}
+
+.aurora-blob-3 {
+  background: radial-gradient(circle, #c084fc, transparent 70%);
+  top: 40%;
+  left: 45%;
+  animation: auroraFloat3 30s ease-in-out infinite;
+}
+
+@keyframes auroraFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(8vw, 4vh) scale(1.15); }
+}
+
+@keyframes auroraFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-6vw, -5vh) scale(0.9); }
+}
+
+@keyframes auroraFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-4vw, 6vh) scale(1.1); }
+}
+
 /*---- light theme overrides ----*/
 [data-theme="light"] {
   --color-primary: #f5f5fa;
@@ -342,4 +399,8 @@
 
 [data-theme="light"] .loading-bar {
   background: rgba(67, 56, 202, 0.12);
+}
+
+[data-theme="light"] .aurora {
+  display: none;
 }
