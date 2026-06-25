@@ -1,5 +1,12 @@
 # Movie App
 
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=flat&logo=vercel)](https://movie-app-one-theta-77.vercel.app/)
+[![CI](https://github.com/Daniel-S-00/Movie-app/actions/workflows/ci.yml/badge.svg)](https://github.com/Daniel-S-00/Movie-app/actions/workflows/ci.yml)
+![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![Vite 7](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)
+![Tailwind 4](https://img.shields.io/badge/Tailwind-4-38BDF8?logo=tailwindcss&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-green)
+
 A modern movie discovery app built with React, Vite, and Tailwind CSS. Search for movies, browse trending searches, and explore a curated catalog powered by [TMDB](https://www.themoviedb.org/).
 
 ![Hero](./docs/screenshots/hero.png)
