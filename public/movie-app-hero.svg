@@ -1,0 +1,17 @@
+﻿<svg width="1440" height="640" viewBox="0 0 1440 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="wash" x1="115" y1="68" x2="1325" y2="595" gradientUnits="userSpaceOnUse"><stop stop-color="#402782" stop-opacity="0.7"/><stop offset="0.46" stop-color="#1C1645" stop-opacity="0.28"/><stop offset="1" stop-color="#7455D8" stop-opacity="0.45"/></linearGradient>
+    <radialGradient id="spot" cx="0" cy="0" r="1" gradientTransform="translate(741 250) rotate(90) scale(310 620)" gradientUnits="userSpaceOnUse"><stop stop-color="#D8CCFF" stop-opacity="0.6"/><stop offset="0.32" stop-color="#9C7AF3" stop-opacity="0.18"/><stop offset="1" stop-color="#2B1D61" stop-opacity="0"/></radialGradient>
+    <linearGradient id="beam" x1="720" y1="45" x2="880" y2="590" gradientUnits="userSpaceOnUse"><stop stop-color="#E7E0FF" stop-opacity="0.5"/><stop offset="1" stop-color="#9D7CFF" stop-opacity="0"/></linearGradient>
+    <filter id="blur" x="-100" y="-100" width="1640" height="840" filterUnits="userSpaceOnUse"><feGaussianBlur stdDeviation="22"/></filter>
+    <pattern id="grain" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.75" fill="#EDE9FE" fill-opacity="0.25"/></pattern>
+  </defs>
+  <rect width="1440" height="640" rx="48" fill="url(#wash)"/>
+  <ellipse cx="740" cy="255" rx="620" ry="310" fill="url(#spot)"/>
+  <path d="M645 48L828 48L1110 640L350 640L645 48Z" fill="url(#beam)" filter="url(#blur)"/>
+  <path d="M-32 566C190 466 340 488 518 578C701 671 917 666 1115 555C1243 484 1360 466 1475 505V688H-32V566Z" fill="#0D0924" fill-opacity="0.72"/>
+  <path d="M-12 584C200 498 344 526 504 604C680 690 918 681 1112 577C1245 506 1364 494 1460 526" stroke="#BFA9FF" stroke-opacity="0.3" stroke-width="2"/>
+  <g stroke="#DCCFFF" stroke-opacity="0.32" stroke-width="2"><path d="M94 95L178 21M153 155L297 28M1107 38L1245 155M1188 15L1362 170"/></g>
+  <g opacity="0.42"><circle cx="150" cy="202" r="40" stroke="#C9B8FF" stroke-width="3"/><circle cx="150" cy="202" r="9" fill="#C9B8FF"/><path d="M1230 230L1294 266V338L1230 374L1166 338V266L1230 230Z" stroke="#DCCFFF" stroke-width="2"/><path d="M1219 281V323L1256 302L1219 281Z" fill="#DCCFFF"/></g>
+  <rect width="1440" height="640" rx="48" fill="url(#grain)" opacity="0.32"/>
+</svg>

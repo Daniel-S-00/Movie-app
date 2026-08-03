@@ -60,8 +60,12 @@ function App() {
       <div className="pattern" />
       <ThemeToggle theme={theme} onToggle={toggleTheme} />
       <div className="wrapper">
-        <header>
-          <img src="/hero.png" alt="Hero banner" />
+        <header className="hero-header">
+          <img
+            className="hero-banner"
+            src="/hero.png"
+            alt="Featured movie posters"
+          />
           <h1>
             Find <span className="text-gradient">Movies</span> You'll Love
           </h1>

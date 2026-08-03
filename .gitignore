@@ -25,6 +25,7 @@ dist-ssr
 
 # AI / opencode tooling (not part of the project)
 .agents/
+.atl/
 .commandcode/
 skills-lock.json
 
