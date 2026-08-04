@@ -1,10 +1,25 @@
-function MovieDetails({ movie, onClose }) {
+import { useState } from "react";
+
+const YOUTUBE_EMBED_URL = "https://www.youtube-nocookie.com/embed";
+
+function getTrailerKey(videos = []) {
+  const youtubeVideos = videos.filter((video) => video.site === "YouTube");
+  return (
+    youtubeVideos.find((video) => video.type === "Trailer")?.key ??
+    youtubeVideos[0]?.key
+  );
+}
+
+function MovieDetails({ movie, videos, onClose }) {
+  const [isPlaying, setIsPlaying] = useState(false);
   const backdropUrl = movie.backdrop_path
     ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
     : null;
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : null;
+  const trailerKey = getTrailerKey(videos);
+  const showPlayer = isPlaying && trailerKey;
 
   return (
     <div className="relative">
@@ -17,13 +32,42 @@ function MovieDetails({ movie, onClose }) {
         <span aria-hidden="true" className="text-xl leading-none">×</span>
       </button>
 
-      {backdropUrl ? (
-        <div
-          className="aspect-video w-full bg-cover bg-center"
-          style={{ backgroundImage: `url(${backdropUrl})` }}
-          role="img"
-          aria-label={`${movie.title} backdrop`}
-        />
+      {backdropUrl || showPlayer ? (
+        <div className="relative aspect-video w-full bg-dark-100">
+          {showPlayer ? (
+            <iframe
+              className="absolute inset-0 h-full w-full"
+              src={`${YOUTUBE_EMBED_URL}/${trailerKey}?autoplay=1&rel=0`}
+              title={`${movie.title} trailer`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <>
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url(${backdropUrl})` }}
+                role="img"
+                aria-label={`${movie.title} backdrop`}
+              />
+              {trailerKey && (
+                <button
+                  type="button"
+                  onClick={() => setIsPlaying(true)}
+                  aria-label={`Play ${movie.title} trailer`}
+                  className="absolute inset-0 flex items-center justify-center bg-black/25 transition hover:bg-black/40 focus:outline-none focus:ring-2 focus:ring-light-100/40"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-2xl text-dark-100 shadow-2xl transition hover:scale-110"
+                  >
+                    ▶
+                  </span>
+                </button>
+              )}
+            </>
+          )}
+        </div>
       ) : posterUrl ? (
         <div className="flex justify-center bg-dark-100 p-6">
           <img

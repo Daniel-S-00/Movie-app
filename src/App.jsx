@@ -34,6 +34,7 @@ function App() {
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const {
     movie: selectedMovie,
+    videos: selectedMovieVideos,
     isLoading: isLoadingDetails,
     error: detailsError,
   } = useMovieDetails(selectedMovieId);
@@ -187,6 +188,7 @@ function App() {
           >
             <MovieDetails
               movie={selectedMovie}
+              videos={selectedMovieVideos}
               onClose={() => setSelectedMovieId(null)}
             />
           </Suspense>

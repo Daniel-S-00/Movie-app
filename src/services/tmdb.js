@@ -36,3 +36,14 @@ export const fetchMovieDetails = async (id) => {
 
   return response.json();
 };
+
+export const fetchMovieVideos = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/movie/${id}/videos`, API_OPTIONS);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch movie videos");
+  }
+
+  const data = await response.json();
+  return data.results ?? [];
+};

@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
-import { fetchMovieDetails } from "../services/tmdb.js";
+import { fetchMovieDetails, fetchMovieVideos } from "../services/tmdb.js";
 
 export const useMovieDetails = (movieId) => {
   const [movie, setMovie] = useState(null);
+  const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!movieId) {
       setMovie(null);
+      setVideos([]);
       setError(null);
       return;
     }
@@ -19,8 +21,14 @@ export const useMovieDetails = (movieId) => {
 
     const load = async () => {
       try {
-        const data = await fetchMovieDetails(movieId);
-        if (!cancelled) setMovie(data);
+        const [details, movieVideos] = await Promise.all([
+          fetchMovieDetails(movieId),
+          fetchMovieVideos(movieId).catch(() => []),
+        ]);
+        if (!cancelled) {
+          setMovie(details);
+          setVideos(movieVideos);
+        }
       } catch (err) {
         if (!cancelled) {
           console.error(err);
@@ -38,5 +46,5 @@ export const useMovieDetails = (movieId) => {
     };
   }, [movieId]);
 
-  return { movie, isLoading, error };
+  return { movie, videos, isLoading, error };
 };

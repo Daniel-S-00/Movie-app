@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { fetchMovies, fetchMovieDetails } from "../tmdb.js";
+import { fetchMovies, fetchMovieDetails, fetchMovieVideos } from "../tmdb.js";
 
 function mockFetch(body, ok = true) {
   return vi.spyOn(globalThis, "fetch").mockResolvedValue({
@@ -86,6 +86,36 @@ describe("TMDB service", () => {
       mockFetch(null, false);
       await expect(fetchMovieDetails(1)).rejects.toThrow(
         "Failed to fetch movie details"
+      );
+    });
+  });
+
+  describe("fetchMovieVideos", () => {
+    it("calls the movie videos endpoint with the given id", async () => {
+      const videos = [
+        { site: "YouTube", type: "Trailer", key: "abc123" },
+      ];
+      const fetchSpy = mockFetch({ results: videos });
+
+      const result = await fetchMovieVideos(603);
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        "https://api.themoviedb.org/3/movie/603/videos",
+        expect.any(Object)
+      );
+      expect(result).toEqual(videos);
+    });
+
+    it("returns an empty array when the response has no results key", async () => {
+      mockFetch({});
+      const result = await fetchMovieVideos(603);
+      expect(result).toEqual([]);
+    });
+
+    it("throws on a non-ok response", async () => {
+      mockFetch(null, false);
+      await expect(fetchMovieVideos(603)).rejects.toThrow(
+        "Failed to fetch movie videos"
       );
     });
   });
