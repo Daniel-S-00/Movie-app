@@ -1,9 +1,18 @@
-import { memo, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
+
+const MAX_TILT = 14;
+
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function MovieComponent({ movie, onSelect, style }) {
   const { title, vote_average, poster_path, release_date, original_language } =
     movie;
   const ref = useRef(null);
+  const frame = useRef(0);
+
+  useEffect(() => () => cancelAnimationFrame(frame.current), []);
 
   const handleClick = () => onSelect?.(movie.id);
 
@@ -15,22 +24,28 @@ function MovieComponent({ movie, onSelect, style }) {
   };
 
   const handleMouseMove = (e) => {
+    if (prefersReducedMotion()) return;
     const el = ref.current;
     if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width;
-    const py = (e.clientY - rect.top) / rect.height;
-    const rotateY = (px - 0.5) * 14;
-    const rotateX = (0.5 - py) * 14;
-    el.style.setProperty("--mx", `${px * 100}%`);
-    el.style.setProperty("--my", `${py * 100}%`);
-    el.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0)`;
+
+    cancelAnimationFrame(frame.current);
+    frame.current = requestAnimationFrame(() => {
+      const rect = el.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width;
+      const py = (e.clientY - rect.top) / rect.height;
+      el.style.setProperty("--mx", `${px * 100}%`);
+      el.style.setProperty("--my", `${py * 100}%`);
+      el.style.setProperty("--rx", `${(0.5 - py) * MAX_TILT}deg`);
+      el.style.setProperty("--ry", `${(px - 0.5) * MAX_TILT}deg`);
+    });
   };
 
   const handleMouseLeave = () => {
     const el = ref.current;
     if (!el) return;
-    el.style.transform = "perspective(900px) rotateX(0) rotateY(0) translateZ(0)";
+    cancelAnimationFrame(frame.current);
+    el.style.setProperty("--rx", "0deg");
+    el.style.setProperty("--ry", "0deg");
   };
 
   return (
