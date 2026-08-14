@@ -11,6 +11,7 @@ A modern movie discovery app built with React, Vite, and Tailwind CSS. Search fo
 
 ![Hero](./docs/screenshots/hero.png)
 ![Movies grid](./docs/screenshots/movies.png)
+![Movie details modal](./docs/screenshots/modal-view.png)
 
 ## Live Demo
 
@@ -22,12 +23,18 @@ A modern movie discovery app built with React, Vite, and Tailwind CSS. Search fo
 - Debounced real-time search (500 ms)
 - Popular movies browse from TMDB
 - "Load more" pagination (20 per page)
-- Movie details modal with backdrop, tagline, runtime, genres, and full overview
+- Movie details modal with backdrop, tagline, runtime, genres, full overview, and official trailer playback
 - Recent searches history (last 5, persisted in `localStorage`)
 - Trending searches from Appwrite — clickable to refill the search
 
+### Localization
+- 12-language i18n (UI strings + TMDB query language) with browser auto-detection
+- Globe language toggle in the top-right corner, persisted in `localStorage`
+
 ### UX & Design
 - Dark / light mode toggle (persisted, sun/moon icon in the top-right corner)
+- Cinematic loading screen and animated aurora background
+- 3D tilt, cursor spotlight, and staggered entrance on movie cards
 - Skeleton loaders during fetch
 - Friendly empty-state with illustration
 - Smooth fade-in on search results
@@ -41,7 +48,7 @@ A modern movie discovery app built with React, Vite, and Tailwind CSS. Search fo
 - Code-split movie-details modal (separate JS chunk, only loads when opened)
 - `React.memo` on movie cards to skip unnecessary re-renders
 - Accessible: keyboard navigation, ARIA labels, visible focus rings, form-based search
-- 38 unit and integration tests with v8 coverage
+- 71 unit and integration tests with v8 coverage
 
 ## Tech Stack
 
@@ -77,32 +84,41 @@ src/
 ├── reportWebVitals.js         # Web Vitals metrics collection
 ├── index.css                  # Tailwind theme + light-mode overrides
 ├── components/
+│   ├── __tests__/             # MovieCard, Search, MovieDetails, LanguageToggle tests
 │   ├── ErrorBoundary.jsx      # Catches render-time errors
 │   ├── EmptyState.jsx         # Friendly "no results" UI
+│   ├── LanguageToggle.jsx     # 12-language globe selector
+│   ├── LoadingScreen.jsx      # Cinematic app-loading overlay
 │   ├── Modal.jsx              # Reusable accessible modal overlay (Esc, focus trap)
-│   ├── MovieCard.jsx          # Memoized movie card with click-to-select
-│   ├── MovieDetails.jsx       # Lazy-loaded movie-details content
+│   ├── MovieCard.jsx          # Memoized movie card with 3D tilt + spotlight
+│   ├── MovieDetails.jsx       # Lazy-loaded details + trailer player
 │   ├── Search.jsx             # Debounced search input (form + Enter)
 │   ├── SkeletonCard.jsx       # Loading placeholder
 │   └── ThemeToggle.jsx        # Dark/light mode switch
 ├── hooks/
+│   ├── __tests__/             # useMovies, useLocalStorage, useMovieDetails, useLanguage tests
+│   ├── useLanguage.js         # Persisted UI language (12 locales)
 │   ├── useLocalStorage.js     # Generic [value, setValue] backed by localStorage
-│   ├── useMovieDetails.js     # Fetches a single movie by id (with cancellation)
+│   ├── useMovieDetails.js     # Fetches a single movie + videos by id (with cancellation)
 │   ├── useMovies.js           # Movies state, debounce, pagination
 │   ├── useRecentSearches.js   # localStorage recent searches (max 5)
 │   ├── useTheme.js            # Dark/light theme with localStorage persistence
 │   └── useTrendingMovies.js   # Appwrite trending fetcher
+├── i18n/
+│   ├── __tests__/             # messages.test.jsx
+│   ├── I18nContext.js         # t() translation hook
+│   ├── I18nProvider.jsx       # Language context provider
+│   ├── languages.js           # Supported locale list
+│   └── messages.js            # All UI strings per language
 ├── pages/
 │   └── NotFound.jsx           # 404 page
 ├── services/
+│   ├── __tests__/             # tmdb.test.js, appwrite.test.js
 │   ├── appwrite.js            # Appwrite client + search-counter helpers
 │   └── tmdb.js                # TMDB API wrapper (fetchMovies, fetchMovieDetails)
 └── test/
     ├── setup.js               # jest-dom matchers
-    ├── smoke.test.js
-    ├── components/__tests__/  # MovieCard.test.jsx, Search.test.jsx
-    ├── hooks/__tests__/       # useLocalStorage.test.js, useMovies.test.js
-    └── services/__tests__/    # tmdb.test.js, appwrite.test.js
+    └── smoke.test.js          # App-level render smoke test
 ```
 
 ## Getting Started
@@ -117,7 +133,7 @@ src/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/your-username/movie-app.git
+git clone https://github.com/Daniel-S-00/Movie-app.git
 cd movie-app
 ```
 
@@ -183,17 +199,18 @@ Open [http://localhost:5173](http://localhost:5173).
 
 ## Testing
 
-The project ships with **38 unit and integration tests** that run automatically on every push and PR via GitHub Actions. Tests are written with Vitest and React Testing Library.
+The project ships with **71 unit and integration tests** that run automatically on every push and PR via GitHub Actions. Tests are written with Vitest and React Testing Library.
 
 What's covered:
 
 | Area        | What's tested                                                                                  |
 | ----------- | ---------------------------------------------------------------------------------------------- |
-| Hooks       | `useLocalStorage` (init / read / write / object values / parse error); `useMovies` (fetch / debounce / `updateSearchCount` / error handling / `loadMore`) |
-| Components  | `MovieCard` (render / fallback / N/A placeholders / click / Enter / a11y); `Search` (value / typing / form role / a11y / no-reload submit) |
+| Hooks       | `useLocalStorage` (init / read / write / object values / parse error); `useMovies` (fetch / debounce / `updateSearchCount` / error handling / `loadMore`); `useMovieDetails` (fetch / videos / errors); `useLanguage` (detection / persistence) |
+| Components  | `MovieCard` (render / fallback / N/A placeholders / click / Enter / a11y); `Search` (value / typing / form role / a11y / no-reload submit); `MovieDetails` (render / trailer); `LanguageToggle` (render / change) |
+| i18n        | `messages` (locale count, key parity across all 12 languages)                                  |
 | Services    | `tmdb` (discover / search / encoded query / non-ok / empty fallback; `fetchMovieDetails` URL and error); `appwrite` (create vs increment / order+limit / error swallow) |
 
-Coverage on the two service modules is **100 %**; the tested hooks and components sit at **91–100 %**.
+The two service modules sit at **100 %** statement, branch, and line coverage; overall line coverage across the project is **66 %**.
 
 Run locally:
 
@@ -224,8 +241,10 @@ To deploy your own fork:
 
 ## Security Notes
 
-- All API keys are read-only and exposed by design (TMDB Read Access Token + Appwrite project keys with restricted permissions)
-- Appwrite platform restrictions are configured to accept requests from `localhost` and the production domain only
+- No server-side secrets exist in this project — the only env vars are `VITE_`-prefixed identifiers that Vite intentionally ships to the client
+- The TMDB Read Access Token (v4) is public by design: it's read-only and TMDB expects it in browser apps
+- Appwrite project/database/collection IDs are identifiers, not credentials, and are required client-side
+- The trending-searches collection is writable by anonymous clients **by design** — it stores only non-sensitive search counts, and no Appwrite server API key (`sk_...`) is used or shipped anywhere in this repo
 - `.env.local` is gitignored — **never commit your `.env` files**
 
 ## License
