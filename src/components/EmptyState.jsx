@@ -1,4 +1,8 @@
+import { useI18n } from "../i18n/I18nContext.js";
+
 function EmptyState({ searchTerm }) {
+  const { t } = useI18n();
+
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
       <img
@@ -8,14 +12,9 @@ function EmptyState({ searchTerm }) {
         className="mb-6 w-32 opacity-50"
       />
       <h3 className="mb-2 text-xl font-semibold text-white">
-        {searchTerm
-          ? `No movies found for "${searchTerm}"`
-          : "No movies to show"}
+        {searchTerm ? t("empty.noResults", { term: searchTerm }) : t("empty.title")}
       </h3>
-      <p className="max-w-md text-sm text-light-200">
-        Try a different search term, check your spelling, or browse the popular
-        movies above.
-      </p>
+      <p className="max-w-md text-sm text-light-200">{t("empty.hint")}</p>
     </div>
   );
 }

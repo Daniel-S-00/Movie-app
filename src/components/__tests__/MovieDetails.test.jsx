@@ -52,7 +52,7 @@ describe("MovieDetails", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Play The Matrix trailer" })
     );
-    const iframe = screen.getByTitle("The Matrix trailer");
+    const iframe = screen.getByTitle("Play The Matrix trailer");
     expect(iframe).toHaveAttribute(
       "src",
       "https://www.youtube-nocookie.com/embed/vKQi3bBA1y8?autoplay=1&rel=0"

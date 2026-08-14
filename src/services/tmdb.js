@@ -2,6 +2,8 @@ import { config } from "../config.js";
 
 const API_BASE_URL = "https://api.themoviedb.org/3";
 
+const DEFAULT_LANGUAGE = "en-US";
+
 const API_OPTIONS = {
   headers: {
     accept: "application/json",
@@ -9,10 +11,10 @@ const API_OPTIONS = {
   },
 };
 
-export const fetchMovies = async (query = "", page = 1) => {
+export const fetchMovies = async (query = "", page = 1, language = DEFAULT_LANGUAGE) => {
   const endpoint = query
-    ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${page}`
-    : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&page=${page}`;
+    ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${page}&language=${language}`
+    : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&page=${page}&language=${language}`;
 
   const response = await fetch(endpoint, API_OPTIONS);
 
@@ -27,8 +29,11 @@ export const fetchMovies = async (query = "", page = 1) => {
   };
 };
 
-export const fetchMovieDetails = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/movie/${id}`, API_OPTIONS);
+export const fetchMovieDetails = async (id, language = DEFAULT_LANGUAGE) => {
+  const response = await fetch(
+    `${API_BASE_URL}/movie/${id}?language=${language}`,
+    API_OPTIONS
+  );
 
   if (!response.ok) {
     throw new Error("Failed to fetch movie details");

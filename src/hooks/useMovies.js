@@ -3,7 +3,7 @@ import { useDebounce } from "react-use";
 import { fetchMovies } from "../services/tmdb.js";
 import { updateSearchCount } from "../services/appwrite.js";
 
-export const useMovies = (initialSearchTerm = "", onSearchSuccess) => {
+export const useMovies = (initialSearchTerm = "", onSearchSuccess, language = "en-US") => {
   const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(initialSearchTerm);
   const [movieList, setMovieList] = useState([]);
@@ -29,7 +29,11 @@ export const useMovies = (initialSearchTerm = "", onSearchSuccess) => {
 
     const loadFirstPage = async () => {
       try {
-        const { results, totalPages } = await fetchMovies(debouncedSearchTerm, 1);
+        const { results, totalPages } = await fetchMovies(
+          debouncedSearchTerm,
+          1,
+          language
+        );
         if (cancelled) return;
         setMovieList(results);
         setHasMore(1 < totalPages);
@@ -52,14 +56,18 @@ export const useMovies = (initialSearchTerm = "", onSearchSuccess) => {
     return () => {
       cancelled = true;
     };
-  }, [debouncedSearchTerm, onSearchSuccess]);
+  }, [debouncedSearchTerm, onSearchSuccess, language]);
 
   const loadMore = useCallback(async () => {
     if (isLoadingMore || !hasMore || isLoading) return;
     const nextPage = page + 1;
     setIsLoadingMore(true);
     try {
-      const { results, totalPages } = await fetchMovies(debouncedSearchTerm, nextPage);
+      const { results, totalPages } = await fetchMovies(
+        debouncedSearchTerm,
+        nextPage,
+        language
+      );
       setMovieList((prev) => [...prev, ...results]);
       setPage(nextPage);
       setHasMore(nextPage < totalPages);
@@ -69,7 +77,7 @@ export const useMovies = (initialSearchTerm = "", onSearchSuccess) => {
     } finally {
       setIsLoadingMore(false);
     }
-  }, [isLoadingMore, hasMore, isLoading, page, debouncedSearchTerm]);
+  }, [isLoadingMore, hasMore, isLoading, page, debouncedSearchTerm, language]);
 
   return {
     searchTerm,

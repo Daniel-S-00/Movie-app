@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useI18n } from "../i18n/I18nContext.js";
 
 const YOUTUBE_EMBED_URL = "https://www.youtube-nocookie.com/embed";
 
@@ -11,6 +12,7 @@ function getTrailerKey(videos = []) {
 }
 
 function MovieDetails({ movie, videos, onClose }) {
+  const { t } = useI18n();
   const [isPlaying, setIsPlaying] = useState(false);
   const backdropUrl = movie.backdrop_path
     ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
@@ -26,7 +28,7 @@ function MovieDetails({ movie, videos, onClose }) {
       <button
         type="button"
         onClick={onClose}
-        aria-label="Close"
+        aria-label={t("details.close")}
         className="absolute top-3 right-3 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition hover:bg-black/80 focus:outline-none focus:ring-2 focus:ring-light-100/40"
       >
         <span aria-hidden="true" className="text-xl leading-none">×</span>
@@ -38,7 +40,7 @@ function MovieDetails({ movie, videos, onClose }) {
             <iframe
               className="absolute inset-0 h-full w-full"
               src={`${YOUTUBE_EMBED_URL}/${trailerKey}?autoplay=1&rel=0`}
-              title={`${movie.title} trailer`}
+              title={t("details.playTrailer", { title: movie.title })}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
@@ -54,7 +56,7 @@ function MovieDetails({ movie, videos, onClose }) {
                 <button
                   type="button"
                   onClick={() => setIsPlaying(true)}
-                  aria-label={`Play ${movie.title} trailer`}
+                  aria-label={t("details.playTrailer", { title: movie.title })}
                   className="absolute inset-0 flex items-center justify-center bg-black/25 transition hover:bg-black/40 focus:outline-none focus:ring-2 focus:ring-light-100/40"
                 >
                   <span
@@ -116,7 +118,9 @@ function MovieDetails({ movie, videos, onClose }) {
 
         {movie.overview && (
           <div>
-            <h3 className="mb-2 font-semibold text-white">Overview</h3>
+            <h3 className="mb-2 font-semibold text-white">
+              {t("details.overview")}
+            </h3>
             <p className="leading-relaxed text-light-200">{movie.overview}</p>
           </div>
         )}

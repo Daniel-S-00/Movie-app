@@ -1,4 +1,7 @@
+import { useI18n } from "../i18n/I18nContext.js";
+
 const Search = ({ searchTerm, setSearchTerm }) => {
+  const { t } = useI18n();
   const handleSubmit = (e) => e.preventDefault();
 
   return (
@@ -7,10 +10,10 @@ const Search = ({ searchTerm, setSearchTerm }) => {
         <img src="search.svg" alt="" aria-hidden="true" />
         <input
           type="search"
-          placeholder="Search a movie"
+          placeholder={t("search.placeholder")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          aria-label="Search for movies"
+          aria-label={t("search.aria")}
         />
       </div>
     </form>

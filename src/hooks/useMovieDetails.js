@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchMovieDetails, fetchMovieVideos } from "../services/tmdb.js";
 
-export const useMovieDetails = (movieId) => {
+export const useMovieDetails = (movieId, language = "en-US") => {
   const [movie, setMovie] = useState(null);
   const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,7 +22,7 @@ export const useMovieDetails = (movieId) => {
     const load = async () => {
       try {
         const [details, movieVideos] = await Promise.all([
-          fetchMovieDetails(movieId),
+          fetchMovieDetails(movieId, language),
           fetchMovieVideos(movieId).catch(() => []),
         ]);
         if (!cancelled) {
@@ -44,7 +44,7 @@ export const useMovieDetails = (movieId) => {
     return () => {
       cancelled = true;
     };
-  }, [movieId]);
+  }, [movieId, language]);
 
   return { movie, videos, isLoading, error };
 };

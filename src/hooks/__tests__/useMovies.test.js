@@ -31,9 +31,31 @@ describe("useMovies", () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    expect(fetchMovies).toHaveBeenCalledWith("", 1);
+    expect(fetchMovies).toHaveBeenCalledWith("", 1, "en-US");
     expect(result.current.movieList).toEqual([{ id: 1, title: "Inception" }]);
     expect(result.current.hasMore).toBe(true);
+  });
+
+  it("refetches with the new language when the language changes", async () => {
+    fetchMovies.mockResolvedValue({
+      results: [{ id: 1, title: "Origen" }],
+      totalPages: 1,
+    });
+
+    const { rerender } = renderHook(
+      ({ language }) => useMovies("", undefined, language),
+      { initialProps: { language: "en-US" } }
+    );
+
+    await waitFor(() => {
+      expect(fetchMovies).toHaveBeenCalledWith("", 1, "en-US");
+    });
+
+    rerender({ language: "es-MX" });
+
+    await waitFor(() => {
+      expect(fetchMovies).toHaveBeenCalledWith("", 1, "es-MX");
+    });
   });
 
   it("debounces search term changes before fetching", async () => {
@@ -53,7 +75,7 @@ describe("useMovies", () => {
 
     await waitFor(
       () => {
-        expect(fetchMovies).toHaveBeenCalledWith("matrix", 1);
+        expect(fetchMovies).toHaveBeenCalledWith("matrix", 1, "en-US");
       },
       { timeout: 1500 }
     );
@@ -127,7 +149,7 @@ describe("useMovies", () => {
     });
 
     expect(fetchMovies).toHaveBeenCalledTimes(2);
-    expect(fetchMovies).toHaveBeenNthCalledWith(2, "", 2);
+    expect(fetchMovies).toHaveBeenNthCalledWith(2, "", 2, "en-US");
     expect(result.current.movieList).toEqual([{ id: 1 }, { id: 2 }, { id: 3 }]);
   });
 

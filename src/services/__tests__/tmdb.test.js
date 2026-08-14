@@ -23,7 +23,7 @@ describe("TMDB service", () => {
       const { results, totalPages } = await fetchMovies("", 1);
 
       expect(fetchSpy).toHaveBeenCalledWith(
-        "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&page=1",
+        "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&page=1&language=en-US",
         expect.objectContaining({
           headers: expect.objectContaining({
             accept: "application/json",
@@ -41,7 +41,7 @@ describe("TMDB service", () => {
       await fetchMovies("hello world", 2);
 
       expect(fetchSpy).toHaveBeenCalledWith(
-        "https://api.themoviedb.org/3/search/movie?query=hello%20world&page=2",
+        "https://api.themoviedb.org/3/search/movie?query=hello%20world&page=2&language=en-US",
         expect.any(Object)
       );
     });
@@ -52,7 +52,16 @@ describe("TMDB service", () => {
       await fetchMovies();
 
       const calledUrl = fetchSpy.mock.calls[0][0];
-      expect(calledUrl).toMatch(/page=1$/);
+      expect(calledUrl).toMatch(/page=1&language=en-US$/);
+    });
+
+    it("passes the language parameter to the endpoint", async () => {
+      const fetchSpy = mockFetch({ results: [], total_pages: 0 });
+
+      await fetchMovies("matrix", 1, "es-MX");
+
+      const calledUrl = fetchSpy.mock.calls[0][0];
+      expect(calledUrl).toContain("language=es-MX");
     });
 
     it("throws on a non-ok response", async () => {
@@ -76,10 +85,19 @@ describe("TMDB service", () => {
       const result = await fetchMovieDetails(603);
 
       expect(fetchSpy).toHaveBeenCalledWith(
-        "https://api.themoviedb.org/3/movie/603",
+        "https://api.themoviedb.org/3/movie/603?language=en-US",
         expect.any(Object)
       );
       expect(result).toEqual(movie);
+    });
+
+    it("passes the language parameter to the endpoint", async () => {
+      const fetchSpy = mockFetch({ id: 603 });
+
+      await fetchMovieDetails(603, "fr-FR");
+
+      const calledUrl = fetchSpy.mock.calls[0][0];
+      expect(calledUrl).toContain("language=fr-FR");
     });
 
     it("throws on a non-ok response", async () => {

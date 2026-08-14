@@ -23,10 +23,27 @@ describe("useMovieDetails", () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    expect(fetchMovieDetails).toHaveBeenCalledWith(603);
+    expect(fetchMovieDetails).toHaveBeenCalledWith(603, "en-US");
     expect(fetchMovieVideos).toHaveBeenCalledWith(603);
     expect(result.current.movie).toEqual({ id: 603, title: "The Matrix" });
     expect(result.current.videos).toEqual([{ site: "YouTube", key: "abc" }]);
+  });
+
+  it("refetches with the new language when the language changes", async () => {
+    const { rerender } = renderHook(
+      ({ id, language }) => useMovieDetails(id, language),
+      { initialProps: { id: 603, language: "en-US" } }
+    );
+
+    await waitFor(() => {
+      expect(fetchMovieDetails).toHaveBeenCalledWith(603, "en-US");
+    });
+
+    rerender({ id: 603, language: "ja-JP" });
+
+    await waitFor(() => {
+      expect(fetchMovieDetails).toHaveBeenCalledWith(603, "ja-JP");
+    });
   });
 
   it("defaults videos to an empty array when the videos request fails", async () => {

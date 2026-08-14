@@ -1,4 +1,5 @@
 import { memo, useEffect, useRef } from "react";
+import { useI18n } from "../i18n/I18nContext.js";
 
 const MAX_TILT = 14;
 
@@ -9,6 +10,7 @@ const prefersReducedMotion = () =>
 function MovieComponent({ movie, onSelect, style }) {
   const { title, vote_average, poster_path, release_date, original_language } =
     movie;
+  const { t } = useI18n();
   const ref = useRef(null);
   const frame = useRef(0);
 
@@ -59,7 +61,7 @@ function MovieComponent({ movie, onSelect, style }) {
       onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
-      aria-label={`View details for ${title}`}
+      aria-label={t("card.viewDetails", { title })}
     >
       <span className="card-spotlight" aria-hidden="true" />
       <img
@@ -78,13 +80,13 @@ function MovieComponent({ movie, onSelect, style }) {
         <div className="content">
           <div className="rating">
             <img src="star.svg" alt="Star icon" />
-            <p>{vote_average ? vote_average.toFixed(1) : "N/A"}</p>
+            <p>{vote_average ? vote_average.toFixed(1) : t("common.na")}</p>
           </div>
           <span>•</span>
           <p className="lang">{original_language}</p>
           <span>•</span>
           <p className="year">
-            {release_date ? release_date.split("-")[0] : "N/A"}
+            {release_date ? release_date.split("-")[0] : t("common.na")}
           </p>
         </div>
       </div>
