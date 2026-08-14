@@ -6,17 +6,22 @@ import Modal from "./components/Modal";
 import EmptyState from "./components/EmptyState";
 import ThemeToggle from "./components/ThemeToggle.jsx";
 import LoadingScreen from "./components/LoadingScreen.jsx";
+import LanguageToggle from "./components/LanguageToggle.jsx";
+import { I18nProvider } from "./i18n/I18nProvider.jsx";
+import { useI18n } from "./i18n/I18nContext.js";
 import { useMovies } from "./hooks/useMovies.js";
 import { useTrendingMovies } from "./hooks/useTrendingMovies.js";
 import { useMovieDetails } from "./hooks/useMovieDetails.js";
 import { useRecentSearches } from "./hooks/useRecentSearches.js";
 import { useTheme } from "./hooks/useTheme.js";
+import { useLanguage } from "./hooks/useLanguage.js";
 
 const MovieDetails = lazy(() => import("./components/MovieDetails.jsx"));
 
 const SKELETON_COUNT = 8;
 
-function App() {
+function AppContent({ language, onLanguageChange }) {
+  const { t } = useI18n();
   const { recent, addRecent, clearRecent } = useRecentSearches();
   const { theme, toggleTheme } = useTheme();
   const {
@@ -29,7 +34,7 @@ function App() {
     hasMore,
     loadMore,
     errorMessage,
-  } = useMovies("", addRecent);
+  } = useMovies("", addRecent, language);
   const trendingMovies = useTrendingMovies();
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const {
@@ -37,7 +42,7 @@ function App() {
     videos: selectedMovieVideos,
     isLoading: isLoadingDetails,
     error: detailsError,
-  } = useMovieDetails(selectedMovieId);
+  } = useMovieDetails(selectedMovieId, language);
   const handleMovieSelect = useCallback(
     (id) => setSelectedMovieId(id),
     []
@@ -47,8 +52,8 @@ function App() {
     const base = "Movie App";
     document.title = searchTerm
       ? `${base} — ${searchTerm}`
-      : `${base} — Discover Films You'll Love`;
-  }, [searchTerm]);
+      : `${base} — ${t("app.titleDefault")}`;
+  }, [searchTerm, t]);
 
   return (
     <main>
@@ -60,6 +65,10 @@ function App() {
       <LoadingScreen />
       <div className="pattern" />
       <ThemeToggle theme={theme} onToggle={toggleTheme} />
+      <LanguageToggle
+        language={language}
+        onLanguageChange={onLanguageChange}
+      />
       <div className="wrapper">
         <header className="hero-header">
           <img
@@ -68,13 +77,13 @@ function App() {
             alt="Featured movie posters"
           />
           <h1>
-            Find <span className="text-gradient">Movies</span> You'll Love
+            <span className="text-gradient">{t("hero.title")}</span>
           </h1>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           {recent.length > 0 && (
             <div className="mx-auto mt-4 flex max-w-3xl flex-wrap items-center justify-center gap-2">
               <span className="text-xs uppercase tracking-wide text-light-200/60">
-                Recent
+                {t("recent.label")}
               </span>
               {recent.map((term) => (
                 <button
@@ -91,14 +100,14 @@ function App() {
                 onClick={clearRecent}
                 className="text-xs text-light-200/60 transition hover:text-light-200 focus:outline-none focus:ring-2 focus:ring-light-100/40"
               >
-                Clear
+                {t("recent.clear")}
               </button>
             </div>
           )}
         </header>
         {trendingMovies.length > 0 && (
           <section className="trending">
-            <h2>Trending Searches</h2>
+            <h2>{t("trending.title")}</h2>
             <ul>
               {trendingMovies.map((movie, index) => (
                 <li
@@ -131,7 +140,7 @@ function App() {
         )}
 
         <section className="all-movies">
-          <h2>All movies</h2>
+          <h2>{t("movies.title")}</h2>
           {isLoading ? (
             <ul aria-label="Loading movies" aria-busy="true">
               {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
@@ -162,7 +171,7 @@ function App() {
                     disabled={isLoadingMore}
                     className="rounded-lg bg-light-100/10 px-6 py-2.5 text-sm font-medium text-white transition hover:bg-light-100/20 focus:outline-none focus:ring-2 focus:ring-light-100/40 disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {isLoadingMore ? "Loading…" : "Load more"}
+                    {isLoadingMore ? t("movies.loadingMore") : t("movies.loadMore")}
                   </button>
                 </div>
               )}
@@ -174,16 +183,20 @@ function App() {
       <Modal
         open={!!selectedMovieId}
         onClose={() => setSelectedMovieId(null)}
-        label="Movie details"
+        label={t("modal.movieDetails")}
       >
         {isLoadingDetails ? (
-          <div className="p-12 text-center text-light-200">Loading details…</div>
+          <div className="p-12 text-center text-light-200">
+            {t("movies.loadingDetails")}
+          </div>
         ) : detailsError ? (
           <div className="p-12 text-center text-red-500">{detailsError}</div>
         ) : selectedMovie ? (
           <Suspense
             fallback={
-              <div className="p-12 text-center text-light-200">Loading…</div>
+              <div className="p-12 text-center text-light-200">
+                {t("movies.loading")}
+              </div>
             }
           >
             <MovieDetails
@@ -195,6 +208,15 @@ function App() {
         ) : null}
       </Modal>
     </main>
+  );
+}
+
+function App() {
+  const [language, setLanguage] = useLanguage();
+  return (
+    <I18nProvider language={language}>
+      <AppContent language={language} onLanguageChange={setLanguage} />
+    </I18nProvider>
   );
 }
 

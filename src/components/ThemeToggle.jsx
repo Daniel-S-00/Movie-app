@@ -1,3 +1,5 @@
+import { useI18n } from "../i18n/I18nContext.js";
+
 function SunIcon() {
   return (
     <svg
@@ -36,8 +38,9 @@ function MoonIcon() {
 }
 
 function ThemeToggle({ theme, onToggle }) {
+  const { t } = useI18n();
   const isDark = theme === "dark";
-  const label = isDark ? "Switch to light mode" : "Switch to dark mode";
+  const label = isDark ? t("theme.switchToLight") : t("theme.switchToDark");
 
   return (
     <button
@@ -45,7 +48,7 @@ function ThemeToggle({ theme, onToggle }) {
       onClick={onToggle}
       aria-label={label}
       title={label}
-      className="fixed top-4 right-4 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-light-100/10 text-white transition hover:bg-light-100/20 focus:outline-none focus:ring-2 focus:ring-light-100/40"
+      className="icon-toggle fixed top-4 right-4 z-30 flex h-10 w-10 items-center justify-center rounded-full bg-light-100/10 text-white transition hover:bg-light-100/20 focus:outline-none focus:ring-2 focus:ring-light-100/40"
     >
       {isDark ? <SunIcon /> : <MoonIcon />}
     </button>

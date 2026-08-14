@@ -492,3 +492,21 @@
 [data-theme="light"] .aurora {
   display: none;
 }
+
+.language-select {
+  color-scheme: dark;
+}
+
+[data-theme="light"] .language-select {
+  color-scheme: light;
+}
+
+[data-theme="light"] .language-select select {
+  color: #1f2937;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .icon-toggle {
+  color: #1f2937;
+  background-color: rgba(67, 56, 202, 0.1);
+}
