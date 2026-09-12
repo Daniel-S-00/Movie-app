@@ -29,7 +29,7 @@ function Modal({ open, onClose, children, label }) {
       onClick={onClose}
     >
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="modal-backdrop absolute inset-0 bg-black/70 backdrop-blur-sm"
         aria-hidden="true"
       />
       <div

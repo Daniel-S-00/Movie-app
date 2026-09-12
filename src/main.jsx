@@ -5,7 +5,10 @@ import './index.css'
 import App from './App.jsx'
 import NotFound from './pages/NotFound.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
+import { applyGpuCapability } from './utils/gpuCapability.js'
 import reportWebVitals from './reportWebVitals.js'
+
+applyGpuCapability()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -142,7 +142,7 @@
   }
 
   .movie-card {
-    @apply relative bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10 will-change-transform;
+    @apply relative bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10;
     transform-style: preserve-3d;
     transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
     transition: transform 0.3s ease-out;
@@ -190,6 +190,7 @@
     }
 
     &:hover:not(.animate-pulse) {
+      will-change: transform;
       transition: transform 0.06s linear;
       transform: perspective(900px) rotateX(var(--rx, 0deg))
         rotateY(var(--ry, 0deg)) translateZ(10px) scale(1.02);
@@ -390,27 +391,40 @@
   max-width: 700px;
   max-height: 700px;
   border-radius: 50%;
-  filter: blur(80px);
   opacity: 0.35;
-  will-change: transform;
 }
 
 .aurora-blob-1 {
-  background: radial-gradient(circle, #7c3aed, transparent 70%);
+  background: radial-gradient(
+    circle,
+    #7c3aed 0%,
+    rgba(124, 58, 237, 0.45) 45%,
+    transparent 72%
+  );
   top: -10%;
   left: -10%;
   animation: auroraFloat1 20s ease-in-out infinite;
 }
 
 .aurora-blob-2 {
-  background: radial-gradient(circle, #4338ca, transparent 70%);
+  background: radial-gradient(
+    circle,
+    #4338ca 0%,
+    rgba(67, 56, 202, 0.45) 45%,
+    transparent 72%
+  );
   bottom: -10%;
   right: -10%;
   animation: auroraFloat2 25s ease-in-out infinite;
 }
 
 .aurora-blob-3 {
-  background: radial-gradient(circle, #c084fc, transparent 70%);
+  background: radial-gradient(
+    circle,
+    #c084fc 0%,
+    rgba(192, 132, 252, 0.45) 45%,
+    transparent 72%
+  );
   top: 40%;
   left: 45%;
   animation: auroraFloat3 30s ease-in-out infinite;
@@ -509,4 +523,35 @@
 [data-theme="light"] .icon-toggle {
   color: #1f2937;
   background-color: rgba(67, 56, 202, 0.1);
+}
+
+/*---- software rendering fallbacks (data-gpu="off") ----*/
+[data-gpu="off"] .aurora-blob {
+  animation: none;
+}
+
+[data-gpu="off"] .movie-card {
+  transform-style: flat;
+  animation: none;
+}
+
+[data-gpu="off"] .movie-card::after,
+[data-gpu="off"] .movie-card .card-spotlight,
+[data-gpu="off"] .movie-card img,
+[data-gpu="off"] .movie-card > .mt-4 {
+  transform: none;
+}
+
+[data-gpu="off"] .animate-pulse {
+  animation: none;
+}
+
+[data-gpu="off"] .modal-backdrop {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+[data-gpu="off"] .hero-banner {
+  filter: none;
 }
