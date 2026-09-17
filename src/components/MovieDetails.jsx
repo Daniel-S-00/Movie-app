@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { track } from "@vercel/analytics";
 import { useI18n } from "../i18n/I18nContext.js";
 
 const YOUTUBE_EMBED_URL = "https://www.youtube-nocookie.com/embed";
@@ -55,7 +56,13 @@ function MovieDetails({ movie, videos, onClose }) {
               {trailerKey && (
                 <button
                   type="button"
-                  onClick={() => setIsPlaying(true)}
+                  onClick={() => {
+                    track("Trailer Play", {
+                      title: movie.title,
+                      id: movie.id,
+                    });
+                    setIsPlaying(true);
+                  }}
                   aria-label={t("details.playTrailer", { title: movie.title })}
                   className="absolute inset-0 flex items-center justify-center bg-black/25 transition hover:bg-black/40 focus:outline-none focus:ring-2 focus:ring-light-100/40"
                 >

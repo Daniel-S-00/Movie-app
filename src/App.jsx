@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { Analytics } from "@vercel/analytics/react";
+import { track } from "@vercel/analytics";
 import Search from "./components/Search";
 import SkeletonCard from "./components/SkeletonCard";
 import MovieCard from "./components/MovieCard";
@@ -25,6 +26,13 @@ function AppContent({ language, onLanguageChange }) {
   const { t } = useI18n();
   const { recent, addRecent, clearRecent } = useRecentSearches();
   const { theme, toggleTheme } = useTheme();
+  const handleSearchSuccess = useCallback(
+    (term) => {
+      addRecent(term);
+      track("Search", { term });
+    },
+    [addRecent]
+  );
   const {
     searchTerm,
     setSearchTerm,
@@ -35,7 +43,7 @@ function AppContent({ language, onLanguageChange }) {
     hasMore,
     loadMore,
     errorMessage,
-  } = useMovies("", addRecent, language);
+  } = useMovies("", handleSearchSuccess, language);
   const trendingMovies = useTrendingMovies();
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   const {
