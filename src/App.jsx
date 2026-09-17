@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import Search from "./components/Search";
 import SkeletonCard from "./components/SkeletonCard";
 import MovieCard from "./components/MovieCard";
@@ -216,6 +217,7 @@ function App() {
   return (
     <I18nProvider language={language}>
       <AppContent language={language} onLanguageChange={setLanguage} />
+      <Analytics />
     </I18nProvider>
   );
 }
